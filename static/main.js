@@ -53,6 +53,10 @@ function bindFunctions(plotDiv) {
     });
 }
 
+function fclick(name) {
+    console.log(name);
+}
+
 function mapInit() {
     map = L.map('map').setView([47.15, 15.37],10);
     L.tileLayer('http://{s}.tile.osm.org/{z}/{x}/{y}.png', {

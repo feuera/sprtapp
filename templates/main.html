@@ -11,10 +11,12 @@
     <body style="height:100%;">
                 <div class="container-fluid" style="height:100%;">
                     <div class="row" style="height:100%;">
-                        <div class="col-2">
-                            <a>hello</a>
+                        <div class="col-3">
+                            {% for link in files %}
+                            <button onclick="fclick('{{link}}')">{{ link }}</button>
+                            {% endfor %}
                         </div>
-                        <div class="col-6" style="height:60%;">
+                        <div class="col-8" style="height:60%;">
                             <div id="map" class="demo-placeholder" float="left"></div>
                         </div>
                     </div>
