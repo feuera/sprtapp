@@ -1,7 +1,7 @@
 
 head.js("static/dist/leaflet.js");
 head.js("static/flot/jquery.min.js");
-head.js("static/flot/jquery-ui.min.js");
+//head.js("static/flot/jquery-ui.min.js");
 head.js("static/flot/jquery.flot.min.js");
 head.js("static/flot/jquery.flot.time.min.js");
 head.js("static/flot/jquery.flot.resize.min.js");
@@ -15,46 +15,62 @@ var marker = 0
 
 head.ready(function() {
     mapInit();
-    printer.text("win size: "+window.size);
+    //printer.text("win size: "+window.size);
 });
 
 
 function bindFunctions(plotDiv) {
+    
     plotDiv.bind("plothover", function (event, pos, item) {
-        gui.onGraphHover(pos.x);
+        //gui.onGraphHover(pos.x);
          //axis coordinates for other axes, if present, are in pos.x2, pos.x3, ...
         // if you need global screen coordinates, they are pos.pageX, pos.pageY
-        //if (item) {
-        //    highlight(item.series, item.datapoint);
-        //    printer.text("You hovered over " + pos.x + ", " + pos.y+", " +  item.datapoint);
-        //}
+            console.log(item);
+        if (item) {
+            //highlight(item.series, item.datapoint);
+            //printer.text("You hovered over " + pos.x + ", " + pos.y+", " +  item.datapoint);
+        }
     });
     //plotDiv.bind("plotpan", function(event, plot) {
     //});
     plotDiv.bind("plotzoom", function(event, plot) {
-        //for (var x in Object.keys(plot.getYAxes())) {
-        //    printer.text("obj: "+x);
-        //}
+        for (var x in Object.keys(plot.getYAxes())) {
+            console.log("obj: "+x);
+            //printer.text("obj: "+x);
+        }
         var axes = plot.getAxes();
-        printer.text("zoom " + Object.keys(axes.yaxis) +" " + axes.yaxis.min + " " + axes.yaxis.max );
+        //printer.text("zoom " + Object.keys(axes.yaxis) +" " + axes.yaxis.min + " " + axes.yaxis.max );
         axes.yaxis.zoom();
         //printer.text("a " + axes.xaxes);
     });
     plotDiv.resize(function () {
-        printer.text("Placeholder is now "
-            + $(this).width() + "x" + $(this).height()
-            + " pixels");
+        //printer.text("Placeholder is now "
+            //+ $(this).width() + "x" + $(this).height()
+            //+ " pixels");
     });
-    $(".demo-container").resizable({
-        maxWidth: 2800,
-        maxHeight: 1500,
-        minWidth: 450,
-        minHeight: 200,
-    });
+    //$(".demo-container").resizable({
+        //maxWidth: 2800,
+        //maxHeight: 1500,
+        //minWidth: 450,
+        //minHeight: 200,
+    //});
 }
 
 function fclick(name) {
     console.log(name);
+    $.getJSON('/dat', {a: name}, function(data) {
+        console.log("got data");
+        console.log(data);
+        //showPlot({"data":data,"label":'hr',"color":"red"}, "plot1");
+        hrD = data["hr"]
+        showPlot(hrD, "plot1");
+        gd = [
+            [47.15, 15.17],
+            [47.26,15.30]
+        ];
+        setLine(data["gps"], "blue")
+        //setLine(data["gpsD"], "blue")
+    });
 }
 
 function mapInit() {
@@ -74,7 +90,7 @@ function mapInit() {
     // add an OpenStreetMap tile layer
     $("#map").resize(function(){
         map.invalidateSize(true);
-        printer.text("map resize"+ map.getSize());
+        //printer.text("map resize"+ map.getSize());
     });
 }
 
@@ -93,9 +109,9 @@ function moveMarker(ltlg) {
 function showPlot(data, divName) {
     //printer.text("data");
     var plotDiv = $("#"+divName);
-    printer.text("plotD:"+data.length +"\n");
+    //printer.text("plotD:"+data.length +"\n");
     if (plotDiv.length == 0) {
-        $('body').append('<div class="demo-container" style="width:100%; height:200px; float:left;">\n<div id="'+ divName + '" class="demo-placeholder"></div>\n</div>');
+        $('#plots').append('<div class="demo-container" style="width:100%; height:200px; float:left;">\n<div id="'+ divName + '" class="demo-placeholder"></div>\n</div>');
         plotDiv = $("#"+divName);
     }
     $.plot(plotDiv, data ,{
